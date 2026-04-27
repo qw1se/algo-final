@@ -1,0 +1,400 @@
+{
+  "info": {
+    "_postman_id": "english-learning-platform-v1",
+    "name": "English Learning Platform API",
+    "description": "Complete REST API collection for English Learning Platform. Set {{base_url}} = http://localhost:8080 and {{token}} after login.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token",    "value": "",                      "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/auth/register", "host": ["{{base_url}}"], "path": ["api","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"alice\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"secret123\",\n  \"fullName\": \"Alice Smith\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": [
+              "if (pm.response.code === 201) {",
+              "  var json = pm.response.json();",
+              "  pm.collectionVariables.set('token', json.data.token);",
+              "  console.log('Token saved:', json.data.token);",
+              "}"
+            ], "type": "text/javascript" }
+          }]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"alice\",\n  \"password\": \"secret123\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": [
+              "if (pm.response.code === 200) {",
+              "  var json = pm.response.json();",
+              "  pm.collectionVariables.set('token', json.data.token);",
+              "  console.log('Token saved:', json.data.token);",
+              "}"
+            ], "type": "text/javascript" }
+          }]
+        },
+        {
+          "name": "Login as Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": [
+              "if (pm.response.code === 200) {",
+              "  var json = pm.response.json();",
+              "  pm.collectionVariables.set('token', json.data.token);",
+              "}"
+            ], "type": "text/javascript" }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/users/me", "host": ["{{base_url}}"], "path": ["api","users","me"] }
+          }
+        },
+        {
+          "name": "[ADMIN] Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/admin/users", "host": ["{{base_url}}"], "path": ["api","admin","users"] }
+          }
+        },
+        {
+          "name": "[ADMIN] Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/admin/users/1", "host": ["{{base_url}}"], "path": ["api","admin","users","1"] }
+          }
+        },
+        {
+          "name": "[ADMIN] Get Users by Role",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/admin/users/role/USER", "host": ["{{base_url}}"], "path": ["api","admin","users","role","USER"] }
+          }
+        },
+        {
+          "name": "[ADMIN] Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/admin/users/2", "host": ["{{base_url}}"], "path": ["api","admin","users","2"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Alice Updated\",\n  \"role\": \"MANAGER\",\n  \"enabled\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "[ADMIN] Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/admin/users/3", "host": ["{{base_url}}"], "path": ["api","admin","users","3"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Get Active Courses (Public)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/courses", "host": ["{{base_url}}"], "path": ["api","courses"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Get All Courses",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/courses/all", "host": ["{{base_url}}"], "path": ["api","courses","all"] }
+          }
+        },
+        {
+          "name": "Get Course by ID (Public)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/courses/1", "host": ["{{base_url}}"], "path": ["api","courses","1"] }
+          }
+        },
+        {
+          "name": "Get Courses by Level (Public)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/courses/level/BEGINNER", "host": ["{{base_url}}"], "path": ["api","courses","level","BEGINNER"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Create Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/courses", "host": ["{{base_url}}"], "path": ["api","courses"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Business English\",\n  \"description\": \"English for professionals and business contexts\",\n  \"level\": \"INTERMEDIATE\",\n  \"active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "[MANAGER] Update Course",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/courses/1", "host": ["{{base_url}}"], "path": ["api","courses","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Business English Updated\",\n  \"description\": \"Updated description\",\n  \"level\": \"UPPER_INTERMEDIATE\",\n  \"active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "[ADMIN] Delete Course",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/courses/1", "host": ["{{base_url}}"], "path": ["api","courses","1"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Toggle Course Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/courses/1/toggle", "host": ["{{base_url}}"], "path": ["api","courses","1","toggle"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lessons",
+      "item": [
+        {
+          "name": "Get Published Lessons by Course (Public)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/lessons/course/1", "host": ["{{base_url}}"], "path": ["api","lessons","course","1"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Get All Lessons by Course",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/lessons/course/1/all", "host": ["{{base_url}}"], "path": ["api","lessons","course","1","all"] }
+          }
+        },
+        {
+          "name": "Get Lesson by ID (Public)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/lessons/1", "host": ["{{base_url}}"], "path": ["api","lessons","1"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Create Lesson",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/lessons", "host": ["{{base_url}}"], "path": ["api","lessons"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lesson 1: Greetings\",\n  \"content\": \"In this lesson you will learn basic greetings in English.\",\n  \"orderIndex\": 1,\n  \"durationMinutes\": 30,\n  \"published\": false,\n  \"courseId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "[MANAGER] Update Lesson",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/lessons/1", "host": ["{{base_url}}"], "path": ["api","lessons","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lesson 1: Greetings (Updated)\",\n  \"content\": \"Updated content for greetings lesson.\",\n  \"orderIndex\": 1,\n  \"durationMinutes\": 45,\n  \"published\": true,\n  \"courseId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "[MANAGER] Delete Lesson",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/lessons/1", "host": ["{{base_url}}"], "path": ["api","lessons","1"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Toggle Publish Lesson",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/lessons/1/toggle-publish", "host": ["{{base_url}}"], "path": ["api","lessons","1","toggle-publish"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enrollments",
+      "item": [
+        {
+          "name": "Enroll in Course",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/enrollments", "host": ["{{base_url}}"], "path": ["api","enrollments"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"courseId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Enrollments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/enrollments/my", "host": ["{{base_url}}"], "path": ["api","enrollments","my"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Get All Enrollments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/enrollments", "host": ["{{base_url}}"], "path": ["api","enrollments"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Get Enrollment by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/enrollments/1", "host": ["{{base_url}}"], "path": ["api","enrollments","1"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Get Enrollments by Course",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/enrollments/course/1", "host": ["{{base_url}}"], "path": ["api","enrollments","course","1"] }
+          }
+        },
+        {
+          "name": "Update My Progress",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/enrollments/1/progress", "host": ["{{base_url}}"], "path": ["api","enrollments","1","progress"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"progressPercent\": 75\n}"
+            }
+          }
+        },
+        {
+          "name": "Complete Course (100%)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/enrollments/1/progress", "host": ["{{base_url}}"], "path": ["api","enrollments","1","progress"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"progressPercent\": 100\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Enrollment",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{base_url}}/api/enrollments/1/cancel", "host": ["{{base_url}}"], "path": ["api","enrollments","1","cancel"] }
+          }
+        },
+        {
+          "name": "[MANAGER] Update Enrollment Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/enrollments/1/status?status=SUSPENDED",
+              "host": ["{{base_url}}"],
+              "path": ["api","enrollments","1","status"],
+              "query": [{ "key": "status", "value": "SUSPENDED" }]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #f0f0f0;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+  ::selection { background: #f0f0f0; color: #0a0a0a; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-white text-black font-mono text-sm font-medium px-5 py-2.5
+           border border-white hover:bg-transparent hover:text-white
+           transition-all duration-200 cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-white font-mono text-sm px-5 py-2.5
+           border border-white/20 hover:border-white/60
+           transition-all duration-200 cursor-pointer;
+  }
+
+  .btn-danger {
+    @apply bg-transparent text-red-400 font-mono text-sm px-4 py-2
+           border border-red-400/30 hover:border-red-400 hover:bg-red-400/10
+           transition-all duration-200 cursor-pointer;
+  }
+
+  .card {
+    @apply bg-[#111] border border-white/10 p-6
+           hover:border-white/25 transition-all duration-200;
+  }
+
+  .input {
+    @apply w-full bg-[#1a1a1a] border border-white/15 text-white
+           font-mono text-sm px-4 py-3 outline-none
+           focus:border-white/50 transition-colors duration-200
+           placeholder:text-white/25;
+  }
+
+  .badge {
+    @apply font-mono text-xs px-2 py-0.5 border;
+  }
+
+  .badge-active  { @apply border-white/40 text-white bg-white/5; }
+  .badge-user    { @apply border-white/30 text-white/70; }
+  .badge-manager { @apply border-yellow-400/40 text-yellow-400/80; }
+  .badge-admin   { @apply border-white text-white; }
+  .badge-green   { @apply border-green-400/40 text-green-400/80; }
+  .badge-red     { @apply border-red-400/40 text-red-400/80; }
+  .badge-gray    { @apply border-white/20 text-white/40; }
+
+  .section-title {
+    @apply font-display text-2xl text-white tracking-tight;
+  }
+
+  .mono-label {
+    @apply font-mono text-xs text-white/40 uppercase tracking-widest;
+  }
+
+  .divider {
+    @apply border-t border-white/8;
+  }
+
+  .tag {
+    @apply font-mono text-xs bg-white/5 border border-white/10 px-2 py-0.5 text-white/50;
+  }
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* Animations */
+.animate-in {
+  animation: slideUp 0.35s ease forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-1 { animation-delay: 0.05s; opacity: 0; }
+.stagger-2 { animation-delay: 0.10s; opacity: 0; }
+.stagger-3 { animation-delay: 0.15s; opacity: 0; }
+.stagger-4 { animation-delay: 0.20s; opacity: 0; }
